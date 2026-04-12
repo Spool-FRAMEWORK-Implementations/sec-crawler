@@ -1,0 +1,30 @@
+infrastructure:
+  watchdog:
+    url: "http://host.docker.internal:8090"
+
+  eventBus:
+    type: "KAFKA"
+    url: "host.docker.internal:9092"
+
+  inbox:
+    s3:
+      bucket: spool-inbox
+      region: us-east-1
+      endpoint: http://host.docker.internal:4566
+
+spoolModuleList:
+  - crawler:
+      id: "gemini-market"
+      source:
+        id: "gemini-market"
+        poll:
+          http:
+            url: "https://api.gemini.com/v2/ticker/BTCEUR"
+          schedule:
+            every: 5
+            unit: "SECONDS"
+        format: "JSON_OBJECT"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "symbol"

@@ -1,0 +1,1 @@
+awsl cloudformation create-stack --stack-name spool-ecs --template-body file://localstack.yml --capabilities CAPABILITY_NAMED_IAM
