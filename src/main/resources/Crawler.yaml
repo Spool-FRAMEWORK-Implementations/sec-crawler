@@ -10,21 +10,125 @@ infrastructure:
     s3:
       bucket: spool-inbox
       region: us-east-1
-      endpoint: http://host.docker.internal:4566
+      endpoint: "http://host.docker.internal:4566"
 
-spoolModuleList:
+  dataLake:
+    s3:
+      bucket: spool-datalake
+      region: us-east-1
+      endpoint: "http://host.docker.internal:4566"
+
+modules:
   - crawler:
-      id: "gemini-market"
+      id: "microsoft-crawler"
       source:
-        id: "gemini-market"
+        id: "sec-microsoft"
         poll:
           http:
-            url: "https://api.gemini.com/v2/ticker/BTCEUR"
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json"
           schedule:
-            every: 5
+            every: 120
             unit: "SECONDS"
-        format: "JSON_OBJECT"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.sharese"
+        enrichment:
+          - source: "entityName"
       eventMapping:
         namingConvention: "SNAKE_CASE"
         attributeList:
-          - value: "symbol"
+          - value: "entityName"
+
+  - crawler:
+      id: "amazon-crawler"
+      source:
+        id: "secamazon"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001018724.json"
+          schedule:
+            every: 120
+            unit: "SECONDS"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.shares"
+        enrichment:
+          - source: "entityName"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "entityName"
+
+  - crawler:
+      id: "nvidia-crawler"
+      source:
+        id: "sec-nvidia"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json"
+          schedule:
+            every: 120
+            unit: "SECONDS"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.shares"
+        enrichment:
+          - source: "entityName"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "entityName"
+
+  - crawler:
+      id: "google-crawler"
+      source:
+        id: "sec-google"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json"
+          schedule:
+            every: 120
+            unit: "SECONDS"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.shares"
+        enrichment:
+          - source: "entityName"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "entityName"
+
+  - crawler:
+      id: "meta-crawler"
+      source:
+        id: "sec-meta"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001326801.json"
+          schedule:
+            every: 120
+            unit: "SECONDS"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.shares"
+        enrichment:
+          - source: "entityName"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "entityName"
+
+  - crawler:
+      id: "tesla-crawler"
+      source:
+        id: "sec-tesla"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json"
+          schedule:
+            every: 120
+            unit: "SECONDS"
+        format: JSON_ARRAY
+        rootPath: "facts.dei.EntityCommonStockSharesOutstanding.units.shares"
+        enrichment:
+          - source: "entityName"
+      eventMapping:
+        namingConvention: "SNAKE_CASE"
+        attributeList:
+          - value: "entityName"

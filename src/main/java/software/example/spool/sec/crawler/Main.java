@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        OTELConfig.init("juan");
+        OTELConfig.init("crawler");
         SpoolNodeDSL.fromDescriptor("/Crawler.yaml");
     }
 }
