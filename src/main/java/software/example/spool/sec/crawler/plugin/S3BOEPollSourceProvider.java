@@ -1,0 +1,61 @@
+package software.example.spool.sec.crawler.plugin;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.example.spool.sec.crawler.S3BOEPollSource;
+import software.spool.crawler.api.port.source.PollSource;
+import software.spool.infrastructure.spi.SpoolPlugin;
+import software.spool.infrastructure.spi.provider.PluginConfiguration;
+import software.spool.infrastructure.spi.provider.PollSourceProvider;
+
+import java.net.URI;
+
+@SpoolPlugin(PollSourceProvider.class)
+public class S3BOEPollSourceProvider implements PollSourceProvider {
+    @Override
+    public String name() {
+        return "S3_BOE";
+    }
+
+    @Override
+    public int priority() {
+        return 0;
+    }
+
+    @Override
+    public boolean supports(PluginConfiguration configuration) {
+        return configuration.has("region") &&
+                configuration.has("bucket") &&
+                configuration.has("endpoint");
+    }
+
+    @Override
+    public PollSource<String> create(PluginConfiguration configuration) {
+        return new S3BOEPollSource("boe-api", buildS3Client(configuration.require("region"), configuration.require("endpoint")));
+    }
+
+    private S3Client buildS3Client(String region, String endpoint) {
+        S3ClientBuilder builder = S3Client.builder()
+                .region(Region.of(region));
+
+        if (endpoint != null && !endpoint.isBlank()) {
+            builder
+                    .endpointOverride(URI.create(endpoint))
+                    .credentialsProvider(StaticCredentialsProvider.create(
+                            AwsBasicCredentials.create("test", "test")
+                    ))
+                    .serviceConfiguration(S3Configuration.builder()
+                            .pathStyleAccessEnabled(true)
+                            .build());
+        } else {
+            builder.credentialsProvider(DefaultCredentialsProvider.create());
+        }
+
+        return builder.build();
+    }
+}

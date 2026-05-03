@@ -3,7 +3,7 @@ infrastructure:
     url: "http://host.docker.internal:8090"
 
   eventBus:
-    type: "KAFKA"
+    type: KAFKA
     url: "host.docker.internal:9092"
 
   inbox:
@@ -20,16 +20,23 @@ infrastructure:
 
 modules:
   - crawler:
-      id: "gemini-crawler"
+      id: boe-crawler
       source:
-        id: "gemini-ticker"
+        id: boe-ticker
         poll:
           http:
-            url: "https://api.gemini.com/v1/trades/BTCUSD"
+            url: "https://boe.es/datosabiertos/api/boe/sumario/20260428"
           schedule:
-            everyMilliseconds: 120000
+            everyMilliseconds: 3600000
         format: JSON_ARRAY
+        rootPath: data.sumario.diario.0.seccion
+        enrichment:
+            - source: data.sumario.metadatos
+              target: metadata
+            - source: data.sumario.diario.0.sumario_diario
+              target: sumario_diario
       eventMapping:
         namingConvention: SNAKE_CASE
         attributeList:
-          - value: "type"
+          - value: nombre
+          - value: departamento.nombre

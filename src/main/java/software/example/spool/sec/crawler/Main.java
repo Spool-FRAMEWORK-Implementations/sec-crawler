@@ -1,13 +1,14 @@
 package software.example.spool.sec.crawler;
 
 import software.spool.core.adapter.otel.OTELConfig;
+import software.spool.core.model.spool.SpoolNode;
 import software.spool.dsl.SpoolNodeDSL;
 
-import java.io.IOException;
-
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         OTELConfig.init("crawler");
-        SpoolNodeDSL.fromDescriptor("/Crawler.yaml");
+        SpoolNode node = SpoolNodeDSL.fromDescriptor("/boe-epigrafes.yaml")
+                .and(SpoolNodeDSL.fromDescriptor("/boe.yaml"));
+        node.start();
     }
 }

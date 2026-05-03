@@ -1,0 +1,110 @@
+infrastructure:
+  watchdog:
+    url: "http://host.docker.internal:8090"
+
+  eventBus:
+    type: "KAFKA"
+    url: "host.docker.internal:9092"
+
+  inbox:
+    s3:
+      bucket: spool-inbox
+      region: us-east-1
+      endpoint: "http://host.docker.internal:4566"
+
+  dataLake:
+    s3:
+      bucket: spool-datalake
+      region: us-east-1
+      endpoint: "http://host.docker.internal:4566"
+
+modules:
+  - crawler:
+      id: "microsoft-crawler"
+      source:
+        id: "sec-microsoft"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"
+
+  - crawler:
+      id: "amazon-crawler"
+      source:
+        id: "sec-amazon"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001018724.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"
+
+  - crawler:
+      id: "nvidia-crawler"
+      source:
+        id: "sec-nvidia"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"
+
+  - crawler:
+      id: "google-crawler"
+      source:
+        id: "sec-google"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"
+
+  - crawler:
+      id: "meta-crawler"
+      source:
+        id: "sec-meta"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001326801.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"
+
+  - crawler:
+      id: "tesla-crawler"
+      source:
+        id: "sec-tesla"
+        poll:
+          http:
+            url: "https://data.sec.gov/api/xbrl/companyfacts/CIK0001318605.json"
+          schedule:
+            everyMilliseconds: 120000
+        format: JSON_OBJECT
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: "cik"

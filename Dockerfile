@@ -11,6 +11,7 @@ COPY target/sec-crawler.jar app.jar
 ENV SERVICE_NAME=sec-crawler
 ENV OTEL_LOGS_ENDPOINT=http://host.docker.internal:3100/otlp/v1/logs
 ENV OTEL_TRACES_ENDPOINT=http://host.docker.internal:4318/v1/traces
+ENV OTEL_METRICS_ENDPOINT=http://host.docker.internal:4320/v1/metrics
 
 EXPOSE 8080
 
