@@ -34,7 +34,7 @@ public class S3BOEPollSource implements PollSource<String> {
     }
 
     @Override
-    public String poll() throws SpoolException {
+    public String fetch() throws SpoolException {
         try {
             ListObjectsV2Response listing = s3Client.listObjectsV2(
                     ListObjectsV2Request.builder()

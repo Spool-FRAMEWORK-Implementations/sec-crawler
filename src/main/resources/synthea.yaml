@@ -1,0 +1,49 @@
+infrastructure:
+  watchdog:
+    url: "http://host.docker.internal:8090"
+
+  eventBus:
+    type: IN_MEMORY
+    url: "host.docker.internal:9092"
+
+  inbox:
+    custom:
+      pluginName: FILE_SYSTEM
+      configuration:
+        path: "D:/spool/inbox"
+
+  dataLake:
+    custom:
+        pluginName: FILE_SYSTEM
+        configuration:
+          path: "D:/spool/datalake"
+
+modules:
+  - crawler:
+      id: synthea-crawler
+      source:
+        id: synthea-api
+        poll:
+          http:
+            url: "http://plytrox.com:8000/events?limit=500"
+          schedule:
+            everyMilliseconds: 30000
+        format: JSON_ARRAY
+        rootPath: events
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: _type
+          - value: PATIENT
+
+  - janitor:
+      id: janitor
+      everyMilliseconds: 10000
+      millisecondsThreshold: 60000
+      millisecondsTtl: 60000
+
+  - ingester:
+      id: ingester
+      flush:
+        size: 500
+        everyMilliseconds: 5000

@@ -1,0 +1,210 @@
+infrastructure:
+  watchdog:
+    url: "http://host.docker.internal:8090"
+
+  eventBus:
+    type: IN_MEMORY
+    url: "host.docker.internal:9092"
+
+  inbox:
+    custom:
+      pluginName: FILE_SYSTEM
+      configuration:
+        path: "D:/Projects/SpoolExamples/sec-crawler/"
+
+modules:
+  - crawler:
+      id: esios-demanda-real
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 1293
+              lookbackMinutes: 10
+              timeTrunc: "five_minutes"
+          schedule:
+            everyMilliseconds: 300000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-co2-treal
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 10355
+              lookbackMinutes: 20
+              timeTrunc: "ten_minutes"
+          schedule:
+            everyMilliseconds: 600000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-generacion-eolica
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 1159
+              lookbackMinutes: 20
+              timeTrunc: "ten_minutes"
+          schedule:
+            everyMilliseconds: 600000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-generacion-solar
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 1161
+              lookbackMinutes: 20
+              timeTrunc: "ten_minutes"
+          schedule:
+            everyMilliseconds: 600000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-desvios-subir
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 686
+              lookbackMinutes: 30
+              timeTrunc: "quarter_hour"
+          schedule:
+            everyMilliseconds: 900000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-desvios-bajar
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 687
+              lookbackMinutes: 30
+              timeTrunc: "quarter_hour"
+          schedule:
+            everyMilliseconds: 900000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name
+
+  - crawler:
+      id: esios-saldo-intercambios
+      source:
+        id: esios-api
+        poll:
+          custom:
+            pluginName: ESIOS_API
+            configuration:
+              apiKey: APIKEY
+              indicatorId: 10027
+              lookbackMinutes: 30
+              timeTrunc: "quarter_hour"
+          schedule:
+            everyMilliseconds: 900000
+        format: JSON_ARRAY
+        rootPath: indicator.values
+        enrichment:
+          - source: indicator.name
+            target: indicator_name
+          - source: indicator.short_name
+            target: indicator_short_name
+          - source: indicator.id
+            target: indicator_id
+      eventMapping:
+        namingConvention: SNAKE_CASE
+        attributeList:
+          - value: indicator_short_name

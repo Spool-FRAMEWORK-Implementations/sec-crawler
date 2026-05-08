@@ -27,7 +27,7 @@ modules:
           http:
             url: "https://boe.es/datosabiertos/api/boe/sumario/20260428"
           schedule:
-            everyMilliseconds: 3600000
+            everyMilliseconds: 86400000
         format: JSON_ARRAY
         rootPath: data.sumario.diario.0.seccion
         enrichment:
