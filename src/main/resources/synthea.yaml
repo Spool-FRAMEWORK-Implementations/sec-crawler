@@ -4,19 +4,18 @@ infrastructure:
 
   eventBus:
     type: IN_MEMORY
-    url: "host.docker.internal:9092"
 
   inbox:
     custom:
       pluginName: FILE_SYSTEM
       configuration:
-        path: "D:/spool/inbox"
+        path: "/host_spool/inbox"
 
   dataLake:
     custom:
         pluginName: FILE_SYSTEM
         configuration:
-          path: "D:/spool/datalake"
+          path: "/host_spool/datalake"
 
 modules:
   - crawler:
